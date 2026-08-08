@@ -41,6 +41,7 @@ body {
   background: var(--bg);
   font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Segoe UI", sans-serif;
   line-height: 1.6;
+  overflow-wrap: anywhere;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -367,6 +368,10 @@ img {
   color: var(--primary);
 }
 
+.quick-nav {
+  display: none;
+}
+
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -387,16 +392,6 @@ img {
   transform: translateY(-3px);
   box-shadow: var(--shadow);
   border-color: var(--line-strong);
-}
-
-.metric-card::before {
-  content: "0x0" attr(data-index);
-  position: absolute;
-  right: 12px;
-  top: 10px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: #9db3c0;
 }
 
 .metric-value {
@@ -749,6 +744,32 @@ img {
     display: none;
   }
 
+  .quick-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    scrollbar-width: none;
+  }
+
+  .quick-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .quick-nav a {
+    flex: 0 0 auto;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #eef4f6;
+    color: var(--primary-dark);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
   .page-body {
     grid-template-columns: 1fr;
   }
@@ -1040,5 +1061,13 @@ img {
 
   html {
     scroll-behavior: auto;
+  }
+}
+
+@media (hover: none) {
+  .metric-card:hover,
+  .project-card:hover {
+    transform: none;
+    box-shadow: none;
   }
 }

@@ -123,7 +123,7 @@ def add_bullets(doc, items, size=10, after=3, line=1.18):
 
 
 def add_entry_header(doc, title, meta, size=10.5):
-    add_rich_paragraph(
+    p = add_rich_paragraph(
         doc,
         [
             (title, {"size": size, "color": INK, "bold": True}),
@@ -133,6 +133,8 @@ def add_entry_header(doc, title, meta, size=10.5):
         after=2,
         line=1.1,
     )
+    p.paragraph_format.keep_with_next = True
+    return p
 
 
 def add_photo_placeholder_table(doc, usable_width_cm, photo_height_cm=3.6):
@@ -418,8 +420,8 @@ def build_two_page(path):
             "基于公司内网制作导航类 HTML 页面；完成 AI 大模型 API 接入、客户端部署、密钥与权限调试及异常排错。",
         ],
         size=9.5,
-        after=1.5,
-        line=1.14,
+        after=1.0,
+        line=1.08,
     )
 
     add_entry_header(doc, "硬件测试工程师", "湖北合力源电子技术有限公司 · 2025.03 - 2025.07")
@@ -430,8 +432,8 @@ def build_two_page(path):
             "完成线束制作、程序烧录与不同胎压工况数据采集，使用 MATLAB 分析数据，配合项目验收。",
         ],
         size=9.5,
-        after=1.5,
-        line=1.14,
+        after=1.0,
+        line=1.08,
     )
 
     add_section(doc, "项目经历", before=5, size=12)
@@ -493,8 +495,8 @@ def build_two_page(path):
     ]
     for title, meta, desc, bullets in projects:
         add_entry_header(doc, title, meta)
-        add_paragraph(doc, desc, size=9, after=1, line=1.12)
-        add_bullets(doc, bullets, size=9, after=1, line=1.12)
+        add_paragraph(doc, desc, size=9, after=0.5, line=1.08)
+        add_bullets(doc, bullets, size=9, after=0.5, line=1.08)
 
     add_section(doc, "专业技能与证书", before=5, size=12)
     skills = [
@@ -505,7 +507,7 @@ def build_two_page(path):
         "综合能力：大厂标准化工作思维，擅长 SOP 标准化、知识库搭建、需求对接与项目全流程落地。",
         "证书：CET-4、低压/高压电工证、AutoCAD 工程师证、5G 承载网络运维职业技能等级证书（中级）。",
     ]
-    add_bullets(doc, skills, size=9, after=1, line=1.12)
+    add_bullets(doc, skills, size=9, after=0.5, line=1.08)
 
     add_section(doc, "校园经历", before=5, size=12)
     add_paragraph(
@@ -514,8 +516,8 @@ def build_two_page(path):
         "2021.10 - 2022.11　青年志愿者协会会长：带领 10+ 人团队组织防疫、地铁、社区志愿服务，"
         "参与创新创业项目并获学校创业扶持。",
         size=9,
-        after=2,
-        line=1.12,
+        after=1,
+        line=1.08,
     )
 
     add_section(doc, "获奖与荣誉", before=5, size=12)
@@ -524,7 +526,7 @@ def build_two_page(path):
         "2022 第九届“大唐杯”全国大学生移动通信 5G 技术大赛全国一等奖；2021 全国大学生数学建模大赛省级一等奖。",
         "连续两年国家励志奖学金、校奖学金；优秀毕业生、优秀毕业论文、优秀志愿者、优秀团干、优秀班干、三好学生、学习之星；成绩专业第一。",
     ]
-    add_bullets(doc, honors, size=9, after=1, line=1.12)
+    add_bullets(doc, honors, size=9, after=0.5, line=1.08)
 
     add_section(doc, "其他经历", before=5, size=12)
     add_paragraph(
@@ -532,8 +534,8 @@ def build_two_page(path):
         "2023.06 - 2023.09　猿起（武汉）科技有限公司 · 班主任兼销售：每周服务 60+ 客户，多期销售榜前列，"
         "月均 GMV 约 2 万，最高 3.5 万。",
         size=9,
-        after=2,
-        line=1.12,
+        after=1,
+        line=1.08,
     )
 
     add_section(doc, "教育背景", before=5, size=12)
@@ -541,15 +543,15 @@ def build_two_page(path):
         doc,
         "2021.09 - 2025.06　武汉东湖学院 · 通信工程 · 本科 · 中共党员",
         size=9.5,
-        after=1,
-        line=1.12,
+        after=0.5,
+        line=1.08,
     )
     add_paragraph(
         doc,
         "主修课程：Python 程序设计、单片机 C 语言程序设计、嵌入式系统、移动通信、电子技术、PCB 设计、工程制图与 CAD。",
         size=9,
-        after=2,
-        line=1.12,
+        after=1,
+        line=1.08,
     )
 
     add_section(doc, "自我评价", before=5, size=12)
@@ -560,8 +562,8 @@ def build_two_page(path):
         "连续两年国家励志奖学金，获大唐杯全国一等奖、数学建模省级一等奖。善于把标准化流程 + 技术自研 + 智能化升级"
         "用于解决实际运维痛点，能够高效推进企业信息化、标准化、数字化建设。",
         size=9,
-        after=2,
-        line=1.12,
+        after=1,
+        line=1.08,
     )
 
     add_keyword_block(doc)
