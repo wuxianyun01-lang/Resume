@@ -40,6 +40,8 @@ python scripts/generate_resume_docx.py
 2. 仓库 Settings -> Pages -> Source 选择 `GitHub Actions`。
 3. 推送后 `.github/workflows/pages.yml` 会自动构建并发布。
 
+新手不想用命令行的话，直接看 `docs/部署指南.md`，里面有浏览器操作的完整步骤和部署包说明。
+
 ### Netlify
 
 1. 打开 [Netlify Drop](https://app.netlify.com/drop)，把本项目文件夹拖进去。
