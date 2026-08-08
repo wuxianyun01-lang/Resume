@@ -2,7 +2,7 @@
 """Generate Wu Zhiyong's IT operations resumes as DOCX.
 
 Design tokens follow the documents skill's compact_reference_guide preset with
-a named resume override: A4 portrait, Microsoft YaHei, teal section headings,
+a named resume override: A4 portrait, Microsoft YaHei, cyan section headings,
 single-column body, and a one-row header grid only for the photo placeholder.
 """
 
@@ -17,11 +17,11 @@ from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
 
-INK = RGBColor(0x17, 0x22, 0x2A)
-MUTED = RGBColor(0x5D, 0x6D, 0x76)
-TEAL = RGBColor(0x0F, 0x76, 0x6E)
-TEAL_DARK = RGBColor(0x11, 0x5E, 0x59)
-HEADER_TEAL = RGBColor(0x0B, 0x3B, 0x36)
+INK = RGBColor(0x10, 0x18, 0x20)
+MUTED = RGBColor(0x5C, 0x6B, 0x76)
+TEAL = RGBColor(0x0E, 0x74, 0x90)
+TEAL_DARK = RGBColor(0x15, 0x5E, 0x75)
+HEADER_TEAL = RGBColor(0x11, 0x18, 0x20)
 AMBER = RGBColor(0xD9, 0x77, 0x06)
 KEYWORD_GRAY = RGBColor(0x4A, 0x5A, 0x63)
 
@@ -63,7 +63,7 @@ def set_style_font(style, name=FONT, size=10, color=INK, bold=False):
     rfonts.set(qn("w:eastAsia"), name)
 
 
-def paragraph_border_bottom(paragraph, color="B7D3CF", size="8", space="4"):
+def paragraph_border_bottom(paragraph, color="B8DCE6", size="8", space="4"):
     ppr = paragraph._p.get_or_add_pPr()
     pbdr = ppr.find(qn("w:pBdr"))
     if pbdr is None:
@@ -122,7 +122,7 @@ def add_bullets(doc, items, size=10, after=3, line=1.18):
             set_run_font(run, size=size)
 
 
-def add_entry_header(doc, title, meta, size=11):
+def add_entry_header(doc, title, meta, size=10.5):
     add_rich_paragraph(
         doc,
         [
@@ -203,7 +203,7 @@ def add_header_text_to_cell(cell):
     role_para.paragraph_format.space_before = Pt(2)
     role_para.paragraph_format.space_after = Pt(6)
     role_para.paragraph_format.line_spacing = 1.1
-    run = role_para.add_run("IT运维工程师 · 桌面运维 / 轻量开发 / AI 应用")
+    run = role_para.add_run("IT运维工程师 · 桌面运维 / 自动化 / AI 应用")
     set_run_font(run, size=11, color=TEAL, bold=True)
 
     meta_para = cell.add_paragraph()
@@ -216,6 +216,12 @@ def add_header_text_to_cell(cell):
     meta2.paragraph_format.space_after = Pt(0)
     meta2.paragraph_format.line_spacing = 1.35
     run = meta2.add_run("微信：19170245568　城市：福建宁德")
+    set_run_font(run, size=8.5, color=MUTED)
+
+    meta3 = cell.add_paragraph()
+    meta3.paragraph_format.space_after = Pt(0)
+    meta3.paragraph_format.line_spacing = 1.35
+    run = meta3.add_run("政治面貌：中共党员　籍贯：江西九江　出生年月：2002.08")
     set_run_font(run, size=8.5, color=MUTED)
 
 
@@ -239,38 +245,44 @@ def setup_document(margins_cm):
 
     doc.core_properties.title = "吴志勇 - IT运维工程师简历"
     doc.core_properties.author = "吴志勇"
-    doc.core_properties.subject = "桌面运维 / 轻量开发 / AI 应用"
+    doc.core_properties.subject = "桌面运维 / 自动化 / AI 应用"
     return doc
 
 
-def add_keyword_block(doc, after_spacing=0):
+def add_keyword_block(doc, after_spacing=0, compact=False):
+    text = (
+        "【岗位关键词】IT运维、桌面运维、Windows终端运维、装机自动化、批量部署、系统异常排查、"
+        "Python自动化、飞书API、内部网页、资产全生命周期管理、AI大模型接入、SOP标准化、知识库"
+        if compact
+        else "【岗位关键词】IT运维、桌面运维、Windows终端运维、装机自动化、软件批量部署、系统异常排查、"
+        "办公外设运维、Python自动化、飞书机器人API、内部网页、HTML页面、IT资产全生命周期管理、"
+        "AI大模型接入、SOP标准化、知识库、会议室网络运维、批量配置部署"
+    )
     p = add_paragraph(
         doc,
-        "【岗位关键词】IT运维、桌面运维、Windows终端运维、软件批量部署、系统异常排查、办公外设运维、"
-        "Python自动化、飞书机器人API、内部网页、HTML页面、IT资产全生命周期管理、AI大模型接入、"
-        "SOP标准化、知识库",
-        size=8,
+        text,
+        size=7 if compact else 8,
         color=KEYWORD_GRAY,
         before=2,
         after=after_spacing,
-        line=1.15,
+        line=1.1 if compact else 1.15,
     )
     return p
 
 
 def build_one_page(path):
-    doc = setup_document(margins_cm=0.5)
-    usable_width_cm = 21.0 - 2 * (0.5 + 0.3)
-    add_photo_placeholder_table(doc, usable_width_cm, photo_height_cm=3.2)
+    doc = setup_document(margins_cm=0.4)
+    usable_width_cm = 21.0 - 2 * (0.4 + 0.3)
+    add_photo_placeholder_table(doc, usable_width_cm, photo_height_cm=2.8)
 
     add_section(doc, "个人定位", before=2, size=12)
     add_paragraph(
         doc,
-        "一年宁德新能源 IDT 部门 IT 运维经验，桌面运维扎实，擅长 Python 自动化与轻量网页开发，"
-        "熟悉 AI 大模型接入与办公场景落地；习惯把零散运维场景 SOP 化、标准化、数字化。",
-        size=9.5,
-        after=1,
-        line=1.14,
+        "一年宁德新能源 IT 运维经验 + 半年硬件测试背景。桌面运维扎实，擅长 Python 自动化与轻量网页开发，"
+        "熟悉 AI 大模型接入；习惯把零散运维场景 SOP 化、标准化、数字化。",
+        size=9,
+        after=0.5,
+        line=1.1,
     )
 
     add_section(doc, "核心成果", before=3, size=12)
@@ -280,11 +292,11 @@ def build_one_page(path):
             "一周独立完成 200+ 台校招 PC 标准化配置交付，零设备故障、零兼容问题。",
             "自研打印机智能监控系统，设备故障响应时长缩短 90% 以上。",
             "主导 IT 仓库数字化改造，资产盘点效率提升 70% 以上。",
-            "自研苹果文件转换工具，跨系统文件转换效率提升 80%。",
+            "自研苹果文件转换等工具，跨系统文件转换效率提升 80%。",
         ],
-        size=9.5,
-        after=1,
-        line=1.12,
+        size=9,
+        after=0.5,
+        line=1.05,
     )
 
     add_section(doc, "工作经历", before=3, size=12)
@@ -292,127 +304,137 @@ def build_one_page(path):
     add_bullets(
         doc,
         [
-            "Windows 终端全域运维、办公软件批量部署、系统与软硬件异常排查，梳理全套运维 SOP 与知识库。",
-            "基于 Python 开发打印机智能监控、苹果文件转换等内部工具，对接飞书机器人实现自动告警。",
-            "主导 IT 仓库数字化改造与资产全生命周期管理，落地自助导航与实景可视化方案。",
-            "基于公司内网制作导航类 HTML 页面；完成 AI 大模型 API 接入、客户端部署与参数调试。",
+            "Windows 终端运维、装机自动化与批量部署，负责 IT 仓库设备配置与退仓检测，日均出仓约 40 台；SecureCRT 完成会议室 VLAN 规划。",
+            "Python 自研打印机监控、文件快搜、苹果转换、域账号一键改密等工具，对接飞书机器人自动告警。",
+            "主导 IT 仓库数字化、资产全生命周期、内网导航页面与 AI 大模型接入，沉淀全套 SOP 与知识库。",
         ],
-        size=9.5,
-        after=1,
-        line=1.12,
+        size=9,
+        after=0.5,
+        line=1.05,
+    )
+    add_paragraph(
+        doc,
+        "2025.03 - 2025.07　湖北合力源电子技术有限公司 · 硬件测试工程师：驻点武汉理工大学，完成新车型胎压测试项目，"
+        "负责线束制作、程序烧录、路测数据采集与 MATLAB 数据分析。",
+        size=9,
+        after=0.5,
+        line=1.05,
     )
 
     add_section(doc, "项目经历", before=3, size=12)
     add_entry_header(doc, "打印机智能监控自动化系统", "Python / 飞书 API", size=10)
     add_bullets(
         doc,
-        [
-            "抓取解析数据库设备运行数据，飞书机器人实时告警，故障响应时长缩短 90% 以上。",
-        ],
-        size=9.5,
-        after=1,
-        line=1.12,
+        ["数据库数据抓取与解析，飞书机器人实时告警，故障响应时长缩短 90% 以上。"],
+        size=9,
+        after=0.5,
+        line=1.05,
     )
-    add_entry_header(doc, "苹果文件格式转换工具", "Python", size=10)
+    add_entry_header(doc, "装机自动化与办公工具集", "Python / 自动化脚本", size=10)
     add_bullets(
         doc,
-        [
-            "Mac/Windows 文件一键批量转换，本地安全处理，员工文件转换效率提升 80%。",
-        ],
-        size=9.5,
-        after=1,
-        line=1.12,
+        ["装机自动化脚本支撑日均出仓约 40 台；自研文件快搜、苹果文件转换、域账号一键改密。"],
+        size=9,
+        after=0.5,
+        line=1.05,
     )
     add_entry_header(doc, "IT 仓库数字化升级与资产全生命周期管理", "资产台账 / SOP", size=10)
     add_bullets(
         doc,
-        [
-            "全流程 SOP + 数字化台账 + 可视化导航，资产盘点效率提升 70% 以上。",
-        ],
-        size=9.5,
-        after=1,
-        line=1.12,
+        ["全流程 SOP + 数字化台账 + 可视化导航，资产盘点效率提升 70% 以上。"],
+        size=9,
+        after=0.5,
+        line=1.05,
     )
-    add_entry_header(doc, "企业 AI 大模型能力接入与落地", "API 接入 / 部署调试", size=10)
+
+    add_section(doc, "专业技能与证书", before=3, size=12)
     add_bullets(
         doc,
         [
-            "多厂商模型接入、部署调试与异常排错，打通企业内部 AI 应用通道。",
+            "桌面运维与网络：Windows 终端运维、批量部署、会议室 VLAN、退仓检测、办公外设运维。",
+            "开发与数据：Python、C、SQL、MATLAB、飞书 API、HTML/CSS、Agent 与工作流。",
+            "资产与 AI：资产全生命周期、SOP、知识库、AI 大模型接入；证书：CET-4、高低压电工证、AutoCAD、5G 承载网络运维（中级）。",
         ],
-        size=9.5,
-        after=1,
-        line=1.12,
+        size=9,
+        after=0.5,
+        line=1.05,
     )
 
-    add_section(doc, "专业技能", before=3, size=12)
-    add_bullets(
-        doc,
-        [
-            "桌面运维与批量部署：Windows 终端运维、系统/软件异常排查、PC 硬件辨识、批量装机与标准化部署、办公外设运维。",
-            "自动化与开发：Python 自动化、数据抓取与解析、飞书机器人 API、轻量 HTML/CSS 页面、内部工具自研。",
-            "资产与流程：IT 资产全生命周期管理、仓库数字化、SOP 标准化、知识库搭建、需求对接与项目落地。",
-            "AI 应用：大模型 API 接入、客户端部署、密钥与权限调试、异常排错、办公场景落地。",
-        ],
-        size=9.5,
-        after=1,
-        line=1.12,
-    )
-
-    add_section(doc, "其他经历与教育", before=3, size=12)
+    add_section(doc, "其他经历、荣誉与教育", before=3, size=12)
     add_paragraph(
         doc,
-        "2023.06 - 2023.08　猿辅导 · 课程顾问（暑期实习）：每周服务 60+ 客户，转化表现前 5%，月均业绩约 1.5 万。",
-        size=9.5,
-        after=1,
-        line=1.12,
+        "2023.06 - 2023.09　猿起（武汉）科技有限公司 · 班主任兼销售：每周服务 60+ 客户，多期销售榜前列，月均 GMV 约 2 万。",
+        size=9,
+        after=0.5,
+        line=1.05,
     )
     add_paragraph(
         doc,
-        "2021.09 - 2025.06　武汉东湖学院 · 通信工程 · 本科",
-        size=9.5,
-        after=1,
-        line=1.12,
+        "2023.09 - 2025.06　班长兼学习委员；2021.10 - 2022.11　青年志愿者协会会长。",
+        size=9,
+        after=0.5,
+        line=1.05,
+    )
+    add_paragraph(
+        doc,
+        "2021.09 - 2025.06　武汉东湖学院 · 通信工程 · 本科；成绩专业第一、连续两年国家励志奖学金；"
+        "大唐杯全国一等奖、数学建模省级一等奖等。",
+        size=9,
+        after=0.5,
+        line=1.05,
     )
 
-    add_keyword_block(doc)
+    add_keyword_block(doc, compact=True)
     doc.save(path)
 
 
 def build_two_page(path):
-    doc = setup_document(margins_cm=0.9)
-    usable_width_cm = 21.0 - 2 * (0.9 + 0.3)
-    add_photo_placeholder_table(doc, usable_width_cm)
+    doc = setup_document(margins_cm=0.8)
+    usable_width_cm = 21.0 - 2 * (0.8 + 0.3)
+    add_photo_placeholder_table(doc, usable_width_cm, photo_height_cm=3.3)
 
-    add_section(doc, "个人定位", before=2)
+    add_section(doc, "个人定位", before=2, size=12)
     add_paragraph(
         doc,
-        "一年宁德新能源 IDT 部门 IT 运维经验，兼具桌面运维落地能力、Python 自动化开发能力与"
-        "AI 应用接入能力。擅长从业务痛点出发，把零散运维工作、高频办公场景、故障处置流程"
-        "SOP 化、标准化、体系化，并独立落地打印机智能监控、苹果文件转换、IT 仓库数字化等"
-        "内部自研项目，以标准化流程 + 技术自研 + 智能化升级提升企业 IT 服务效率。",
-        size=10,
-        after=3,
-        line=1.22,
-    )
-
-    add_section(doc, "工作经历")
-    add_entry_header(doc, "桌面运维资深技术员", "宁德新能源科技有限公司 · IDT 部门 · 2025.07 - 至今")
-    add_bullets(
-        doc,
-        [
-            "负责公司全域 Windows 终端运维、办公软件批量部署、系统与软硬件异常排查，熟练处理终端报错、权限异常、系统卡顿与软件兼容问题。",
-            "基于 Python 独立开发打印机智能监控系统，对接飞书机器人实现设备故障自动告警与 7×24 小时无人值守监控。",
-            "自研苹果文件格式转换工具，解决 Mac 与 Windows 跨系统文件兼容问题，成为常态化内部办公工具。",
-            "主导 IT 仓库数字化改造与资产全生命周期管理，落地自助导航与实景可视化方案，盘点效率提升 70% 以上。",
-            "独立承接 200+ 台校招 PC 批量配置项目，一周完成系统安装、软件部署、驱动适配与资产绑定，零故障交付。",
-            "基于公司内网制作导航类 HTML 页面；完成 AI 大模型 API 接入、客户端部署、密钥与权限调试及异常排错。",
-        ],
-        size=10,
+        "一年宁德新能源 IDT 部门 IT 运维经验，叠加半年硬件测试背景，兼具桌面运维落地能力、Python 自动化开发能力"
+        "与 AI 应用接入能力。擅长从业务痛点出发，把零散运维工作、高频办公场景、故障处置流程 SOP 化、标准化、体系化，"
+        "并独立落地打印机智能监控、装机自动化、苹果文件转换、IT 仓库数字化等内部自研项目，以标准化流程 + 技术自研"
+        "+ 智能化升级提升企业 IT 服务效率。",
+        size=9.5,
         after=2,
         line=1.18,
     )
 
-    add_section(doc, "项目经历")
+    add_section(doc, "工作经历", before=5, size=12)
+    add_entry_header(doc, "桌面运维资深技术员", "宁德新能源科技有限公司 · IDT 部门 · 2025.07 - 至今")
+    add_bullets(
+        doc,
+        [
+            "负责公司全域 Windows 终端运维、软件批量部署与系统异常排查；负责 IT 仓库电脑/终端机安装配置与退仓检测，日均出仓约 40 台，基于服务器编写装机自动化脚本实现装机自动化。",
+            "基于 Python 独立开发打印机智能监控系统并对接飞书机器人实现自动告警与 7×24 小时无人值守监控；自研文件快搜、苹果文件转换、域账号一键修改密码等办公工具。",
+            "主导 IT 仓库数字化改造与资产全生命周期管理，落地自助导航与实景可视化方案，盘点效率提升 70% 以上。",
+            "使用 SecureCRT 命令行修改会议室 VLAN，完成厂区会议室规划与网络运维；沉淀全套运维 SOP 与问题知识库。",
+            "独立承接 200+ 台校招 PC 批量配置项目，一周完成系统安装、软件部署、驱动适配与资产绑定，零故障交付。",
+            "基于公司内网制作导航类 HTML 页面；完成 AI 大模型 API 接入、客户端部署、密钥与权限调试及异常排错。",
+        ],
+        size=9.5,
+        after=1.5,
+        line=1.14,
+    )
+
+    add_entry_header(doc, "硬件测试工程师", "湖北合力源电子技术有限公司 · 2025.03 - 2025.07")
+    add_bullets(
+        doc,
+        [
+            "驻点武汉理工大学，对接浙江万安科技新车型胎压测试项目，跟进硬件制作、软件集成、路测数据采集全流程。",
+            "完成线束制作、程序烧录与不同胎压工况数据采集，使用 MATLAB 分析数据，配合项目验收。",
+        ],
+        size=9.5,
+        after=1.5,
+        line=1.14,
+    )
+
+    add_section(doc, "项目经历", before=5, size=12)
     projects = [
         (
             "打印机智能监控自动化系统",
@@ -420,8 +442,7 @@ def build_two_page(path):
             "针对人工巡检效率低、故障发现滞后等问题，独立开发全套智能监控系统，替代人工巡检。",
             [
                 "编写数据抓取与解析逻辑，自动读取数据库内打印机运行数据，精准识别离线、卡纸、缺墨、故障停机等异常。",
-                "完成飞书机器人 API 深度对接，搭建自动化告警推送体系，设备异常实时通知运维人员。",
-                "实现 7×24 小时无人值守监控，故障响应时长缩短 90% 以上，全年无大规模打印设备故障影响办公。",
+                "完成飞书机器人 API 深度对接，实现 7×24 小时无人值守监控与实时告警，故障响应时长缩短 90% 以上。",
             ],
         ),
         (
@@ -434,12 +455,12 @@ def build_two_page(path):
             ],
         ),
         (
-            "公司内网导航 HTML 页面",
-            "HTML / CSS",
-            "基于公司内网环境制作导航类网页，集中常用系统、工具与知识入口。",
+            "装机自动化脚本与办公工具集",
+            "Python / 自动化脚本",
+            "基于公司服务器沉淀批量装机与高频办公自动化能力，降低重复人工操作。",
             [
-                "独立完成页面结构、样式与入口维护，简化员工访问路径。",
-                "减少员工重复咨询，提升内部信息获取与办公协同效率。",
+                "编写装机自动化脚本，实现电脑装机、环境配置流程自动化，支撑日均出仓约 40 台。",
+                "Python 自研文件快搜、苹果文件转换、域账号一键修改密码等工具，显著提升办公效率。",
             ],
         ),
         (
@@ -447,8 +468,7 @@ def build_two_page(path):
             "资产台账 / SOP / 可视化导航",
             "针对 IT 仓库资产杂乱、查找困难、台账不规范等问题，重构标准化、数字化资产管控模式。",
             [
-                "梳理落地入库、领用、调拨、盘点、报废全流程 SOP，实现全环节规范作业。",
-                "规划设计 IT 仓库自助导航系统与实景可视化导航方案，优化资产检索逻辑。",
+                "梳理落地入库、领用、调拨、盘点、报废全流程 SOP；规划设计自助导航与实景可视化导航方案。",
                 "数字化资产台账实现实物与数据一一对应，盘点效率提升 70% 以上，杜绝资产流失与闲置。",
             ],
         ),
@@ -466,59 +486,82 @@ def build_two_page(path):
             "批量部署 / 资产管理",
             "针对校招新人大批量办公设备需求，快速完成数百台 PC 的系统安装、软件部署、环境调试与资产绑定。",
             [
-                "制定统一配置规范，覆盖系统版本、办公软件、开发工具、权限参数标准化设置。",
-                "单人一周完成 200+ 台设备系统装机、软件批量部署、驱动适配、账号权限配置与资产台账绑定。",
+                "制定统一配置规范，单人一周完成 200+ 台设备系统装机、软件批量部署、驱动适配与资产台账绑定。",
                 "零设备故障、零兼容问题，保障新人入职即用，沉淀可复用的 PC 批量配置标准化流程。",
             ],
         ),
     ]
     for title, meta, desc, bullets in projects:
         add_entry_header(doc, title, meta)
-        add_paragraph(doc, desc, size=9.5, after=1.5, line=1.18)
-        add_bullets(doc, bullets, size=9.5, after=1.5, line=1.18)
+        add_paragraph(doc, desc, size=9, after=1, line=1.12)
+        add_bullets(doc, bullets, size=9, after=1, line=1.12)
 
-    add_section(doc, "专业技能")
+    add_section(doc, "专业技能与证书", before=5, size=12)
     skills = [
-        "开发能力：熟练 Python 自动化开发，可独立完成办公工具、监控系统自研；熟悉数据抓取、解析与处理；具备轻量 HTML/CSS 页面制作能力。",
-        "自动化能力：擅长飞书机器人 API 对接、自动化告警、办公场景自动化脚本开发，实现运维工作降本增效。",
-        "运维能力：精通台式机、笔记本等 PC 设备硬件辨识、系统装机、软硬件调试与批量标准化部署；熟练完成 Windows 终端运维、软件批量部署、系统异常排查与办公外设运维。",
-        "资产管理：精通 IT 资产全生命周期管理、仓库数字化优化、自助导航系统方案落地。",
-        "智能化能力：AI 大模型 API 接入、客户端部署、参数调试、异常排错，企业 AI 办公场景落地。",
-        "综合能力：具备大厂标准化工作思维，擅长工作流程梳理、场景拆解、SOP 标准化沉淀、知识库搭建与项目全流程落地。",
+        "开发能力：熟练 Python、C 语言、SQL、MATLAB、Proteus8、STM32、AutoCAD，可独立完成办公工具与监控系统自研。",
+        "自动化与智能化：飞书机器人 API、自动化告警、装机自动化脚本、Agent 与工作流；AI 大模型 API 接入、部署与调参。",
+        "运维能力：Windows 终端运维、软件批量部署、会议室网络运维（VLAN）、设备退仓检测与办公外设运维。",
+        "资产管理：IT 资产全生命周期管理、仓库数字化优化、自助导航与可视化导航方案落地。",
+        "综合能力：大厂标准化工作思维，擅长 SOP 标准化、知识库搭建、需求对接与项目全流程落地。",
+        "证书：CET-4、低压/高压电工证、AutoCAD 工程师证、5G 承载网络运维职业技能等级证书（中级）。",
     ]
-    add_bullets(doc, skills, size=9.5, after=1.5, line=1.18)
+    add_bullets(doc, skills, size=9, after=1, line=1.12)
 
-    add_section(doc, "其他经历")
+    add_section(doc, "校园经历", before=5, size=12)
     add_paragraph(
         doc,
-        "2023.06 - 2023.08　猿辅导 · 课程顾问（暑期实习）：每周服务 60+ 客户，转化表现前 5%，"
-        "月均业绩约 1.5 万，锻炼了沟通表达、客户服务与结果导向的工作能力。",
-        size=9.5,
+        "2023.09 - 2025.06　班长兼学习委员：组织班级事务，带动学习氛围，带领同学参加学科竞赛；"
+        "2021.10 - 2022.11　青年志愿者协会会长：带领 10+ 人团队组织防疫、地铁、社区志愿服务，"
+        "参与创新创业项目并获学校创业扶持。",
+        size=9,
         after=2,
-        line=1.18,
+        line=1.12,
     )
 
-    add_section(doc, "教育背景")
+    add_section(doc, "获奖与荣誉", before=5, size=12)
+    honors = [
+        "2024 全国大学生文学作品大赛全国三等奖；2023 新华三杯全国大学生数字技术大赛省级二等奖。",
+        "2022 第九届“大唐杯”全国大学生移动通信 5G 技术大赛全国一等奖；2021 全国大学生数学建模大赛省级一等奖。",
+        "连续两年国家励志奖学金、校奖学金；优秀毕业生、优秀毕业论文、优秀志愿者、优秀团干、优秀班干、三好学生、学习之星；成绩专业第一。",
+    ]
+    add_bullets(doc, honors, size=9, after=1, line=1.12)
+
+    add_section(doc, "其他经历", before=5, size=12)
     add_paragraph(
         doc,
-        "2021.09 - 2025.06　武汉东湖学院 · 通信工程 · 本科",
-        size=10,
+        "2023.06 - 2023.09　猿起（武汉）科技有限公司 · 班主任兼销售：每周服务 60+ 客户，多期销售榜前列，"
+        "月均 GMV 约 2 万，最高 3.5 万。",
+        size=9,
         after=2,
-        line=1.18,
+        line=1.12,
     )
 
-    add_section(doc, "自我评价")
+    add_section(doc, "教育背景", before=5, size=12)
     add_paragraph(
         doc,
-        "拥有一年大厂体系下数字化运维与自研开发实战经验，兼具技术开发能力、大批量设备运维落地能力"
-        "与标准化体系化工作思维。核心擅长 Python 自动化项目开发、轻量网页页面制作、PC 电脑批量配置部署、"
-        "办公场景数字化改造与工作流程 SOP 标准化沉淀。独立落地打印机智能监控系统、苹果文件转换工具等"
-        "多个自研项目，高效完成 200+ 台校招电脑批量配置交付，熟悉飞书机器人对接、数据库数据处理与"
-        "AI 模型接入。善于挖掘办公与运维痛点，以标准化流程 + 技术自研 + 智能化升级解决实际问题，"
-        "能够高效推进企业信息化、标准化、数字化建设工作。",
+        "2021.09 - 2025.06　武汉东湖学院 · 通信工程 · 本科 · 中共党员",
         size=9.5,
+        after=1,
+        line=1.12,
+    )
+    add_paragraph(
+        doc,
+        "主修课程：Python 程序设计、单片机 C 语言程序设计、嵌入式系统、移动通信、电子技术、PCB 设计、工程制图与 CAD。",
+        size=9,
         after=2,
-        line=1.2,
+        line=1.12,
+    )
+
+    add_section(doc, "自我评价", before=5, size=12)
+    add_paragraph(
+        doc,
+        "1.5 年 IT 运维与硬件测试实战经验，兼具技术开发能力、大批量设备运维落地能力与标准化体系化工作思维。"
+        "擅长 Python 自动化、装机自动化、PC 批量部署、办公场景数字化改造与 SOP 沉淀；在校成绩专业第一，"
+        "连续两年国家励志奖学金，获大唐杯全国一等奖、数学建模省级一等奖。善于把标准化流程 + 技术自研 + 智能化升级"
+        "用于解决实际运维痛点，能够高效推进企业信息化、标准化、数字化建设。",
+        size=9,
+        after=2,
+        line=1.12,
     )
 
     add_keyword_block(doc)

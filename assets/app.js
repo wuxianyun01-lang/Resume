@@ -5,7 +5,7 @@
     window.lucide.createIcons();
   }
 
-  var revealItems = document.querySelectorAll(".reveal");
+  var revealItems = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
   var metricsSection = document.querySelector("#metrics");
 
   function animateCounter(el) {
@@ -31,6 +31,79 @@
     requestAnimationFrame(step);
   }
 
+  function initScrollProgress() {
+    var bar = document.querySelector("#progress-bar");
+    if (!bar) {
+      return;
+    }
+    function update() {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var height = document.documentElement.scrollHeight - window.innerHeight;
+      var progress = height > 0 ? Math.min((scrollTop / height) * 100, 100) : 0;
+      bar.style.width = progress + "%";
+    }
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+  }
+
+  function initConsole() {
+    var lines = Array.prototype.slice.call(document.querySelectorAll(".console-body p"));
+    if (!lines.length) {
+      return;
+    }
+    lines.forEach(function (line, index) {
+      line.style.opacity = "0";
+      line.style.transition = "opacity 0.45s ease";
+      line.style.transitionDelay = index * 450 + "ms";
+      window.setTimeout(function () {
+        line.style.opacity = "1";
+      }, 250 + index * 450);
+    });
+  }
+
+  function initCopyLink() {
+    var button = document.querySelector("[data-copy-link]");
+    if (!button) {
+      return;
+    }
+    button.addEventListener("click", function () {
+      var url = window.location.href;
+      var label = button.querySelector("span");
+      function done() {
+        if (label) {
+          var original = label.textContent;
+          label.textContent = "已复制";
+          window.setTimeout(function () {
+            label.textContent = original;
+          }, 1600);
+        }
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, function () {
+          fallbackCopy(url, done);
+        });
+      } else {
+        fallbackCopy(url, done);
+      }
+    });
+  }
+
+  function fallbackCopy(text, done) {
+    var area = document.createElement("textarea");
+    area.value = text;
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    try {
+      document.execCommand("copy");
+    } catch (e) {
+      /* ignore */
+    }
+    document.body.removeChild(area);
+    done();
+  }
+
   if ("IntersectionObserver" in window) {
     var revealObserver = new IntersectionObserver(
       function (entries) {
@@ -44,7 +117,8 @@
       { threshold: 0.12 }
     );
 
-    revealItems.forEach(function (item) {
+    revealItems.forEach(function (item, index) {
+      item.style.setProperty("--delay", (index % 8) * 60 + "ms");
       revealObserver.observe(item);
     });
 
@@ -83,4 +157,8 @@
       window.print();
     });
   }
+
+  initScrollProgress();
+  initConsole();
+  initCopyLink();
 })();

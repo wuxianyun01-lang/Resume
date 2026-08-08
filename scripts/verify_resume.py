@@ -50,7 +50,7 @@ KEY_FACTS = [
     "70%",
     "80%",
     "200+",
-    "猿辅导",
+    "猿起",
     "打印机智能监控",
     "苹果文件",
     "仓库数字化",
@@ -59,6 +59,19 @@ KEY_FACTS = [
     "导航",
     "校招",
     "SOP",
+    "湖北合力源",
+    "硬件测试",
+    "装机自动化",
+    "域账号",
+    "VLAN",
+    "大唐杯",
+    "数学建模",
+    "国家励志奖学金",
+    "中共党员",
+    "班长",
+    "青年志愿者协会",
+    "CET-4",
+    "5G 承载网络运维",
 ]
 
 
@@ -105,10 +118,10 @@ def main():
     with pdfplumber.open(two_pdf) as pdf:
         assert len(pdf.pages) == 2, "two-page PDF must be exactly 2 pages"
 
-    # One-page: top/bottom 0.5cm, left/right 0.8cm.
-    check_pdf_bounds(one_pdf, left_pt=22.68, right_pt=22.68, top_pt=14.17, bottom_pt=14.17)
-    # Two-page: top/bottom 0.9cm, left/right 1.2cm.
-    check_pdf_bounds(two_pdf, left_pt=34.02, right_pt=34.02, top_pt=25.51, bottom_pt=25.51)
+    # One-page: top/bottom 0.4cm, left/right 0.7cm.
+    check_pdf_bounds(one_pdf, left_pt=19.84, right_pt=19.84, top_pt=11.34, bottom_pt=11.34)
+    # Two-page: top/bottom 0.8cm, left/right 1.1cm.
+    check_pdf_bounds(two_pdf, left_pt=31.18, right_pt=31.18, top_pt=22.68, bottom_pt=22.68)
 
     print("All resume QA checks passed.")
 
