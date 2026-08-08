@@ -435,6 +435,14 @@ img {
   margin-bottom: 34px;
 }
 
+.main-col .section:last-child {
+  margin-bottom: 0;
+}
+
+.main-col .project-card:last-child {
+  margin-bottom: 0;
+}
+
 .section-title {
   display: flex;
   align-items: center;
