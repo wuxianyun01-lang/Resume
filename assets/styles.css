@@ -416,8 +416,8 @@ img {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
   gap: 28px;
-  align-items: start;
-  padding: 36px 0 36px;
+  align-items: stretch;
+  padding: 36px 0 20px;
 }
 
 .bottom-band {
@@ -594,7 +594,9 @@ img {
 }
 
 .side-col {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 18px;
   position: sticky;
   top: 80px;
